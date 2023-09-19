@@ -1,24 +1,31 @@
-import styles from "../styles.module.css";
+import React, { useState, useEffect } from "react";
+import PhotoListComponent from "../components/PhotoListComponent";
 
-const generateRandomImageUrl = () => {
-  const width = Math.floor(Math.random() * 500) + 100;
-  const height = Math.floor(Math.random() * 500) + 100;
-  return `https://placekitten.com/${width}/${height}`;
-};
+const App = () => {
+  const [text, setText] = useState("");
+  const [photoList, setPhotoList] = useState([]);
 
-const ImageList = () => {
-  const images = Array.from({ length: 500 }, (_, index) => ({
-    id: index,
-    url: generateRandomImageUrl(),
-  }));
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/photos")
+      .then((res) => res.json())
+      .then(setPhotoList);
+  }, []);
 
   return (
-    <div className={styles.imageList}>
-      {images.map((image) => (
-        <img key={image.id} src={image.url} alt={`Image ${image.id}`} />
-      ))}
+    <div style={{ margin: "32px", textAlign: "center" }}>
+      <div>
+        <label htmlFor="text">[text]</label>
+        <input
+          id="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <PhotoListComponent text={text} photoList={photoList} />
+      </div>
     </div>
   );
 };
 
-export default ImageList;
+export default App;

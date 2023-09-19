@@ -1,0 +1,38 @@
+.container {
+  margin: 0 auto;
+  padding: 15px;
+}
+
+.size1 {
+  max-width: 300px;
+}
+
+.size2 {
+  max-width: 585px;
+}
+
+.size3 {
+  max-width: 865px;
+}
+
+.text {
+  color: hsl(206, 10%, 5%);
+}
+
+.imageList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.imageListItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.image {
+  width: 100px;
+  height: auto;
+}
