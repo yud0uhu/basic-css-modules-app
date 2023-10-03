@@ -9,9 +9,10 @@ const Button = () => {
 
   return (
     <button
-      className={`${styles.button} ${isActive ? styles.active : ""}`}
+      className={`${styles.buttonWrapper} ${isActive ? styles.active : ""}`}
       onClick={handleClick}
     >
+      <span className={styles.icon}>🐻</span>
       Click me
     </button>
   );

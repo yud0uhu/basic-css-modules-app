@@ -23,50 +23,98 @@
 ```css
 /* example/styles/button.module.css */
 
-.button {
-  background-color: blue;
-  color: white;
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 48px;
+  border-radius: 50px;
+  background-color: rgb(245, 205, 0);
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  padding: 0.25em 1em;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.button.active {
-  background-color: red;
+.buttonWrapper:active {
+  transition-duration: 0.05s;
+  box-shadow: 0 0 0.2em #0003;
+  transform: scale(0.95);
+  filter: brightness(0.9) contrast(1.2);
+}
+
+.icon {
+  content: "🐻";
+  display: inline-block;
+  padding-right: 0.5em;
+}
+
+@media screen and (max-width: 360px) {
+  .icon {
+    content: "🐱";
+  }
 }
 ```
 
 ```tsx
 // example/components/Button.tsx
 
-import { useState } from "react";
-import styles from "../styles/button.module.css";
+import { useState, useEffect } from "react";
+import PhotoListComponent from "../components/PhotoListComponent";
 
-const Button = () => {
-  const [isActive, setIsActive] = useState(false);
+const App = () => {
+  const [text, setText] = useState("");
+  const [photoList, setPhotoList] = useState([]);
 
-  const handleClick = () => {
-    setIsActive(!isActive);
-  };
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/photos")
+      .then((res) => res.json())
+      .then(setPhotoList);
+  }, []);
 
   return (
-    <button
-      className={`${styles.button} ${isActive ? styles.active : ""}`}
-      onClick={handleClick}
-    >
-      Click me
-    </button>
+    <div style={{ margin: "32px", textAlign: "center" }}>
+      <div>
+        <label htmlFor="text">[text]</label>
+        <input
+          id="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <PhotoListComponent text={text} photoList={photoList} />
+      </div>
+    </div>
   );
 };
 
-export default Button;
+export default App;
 ```
 
 CSS Modules におけるクラスセレクタは、ブラウザ上で一意のクラス名に自動変換される
 
 ```css
-.button_button__WU4fg.button_active__RrQv_ {
-  background-color: red;
+.button_buttonWrapper__4xpvy:active {
+  transition-duration: 0.05s;
+  box-shadow: 0 0 0.2em #0003;
+  transform: scale(0.95);
+  filter: brightness(0.9) contrast(1.2);
 }
-.button_button__WU4fg {
-  background-color: blue;
-  color: white;
+.button_buttonWrapper__4xpvy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 48px;
+  border-radius: 50px;
+  background-color: rgb(245, 205, 0);
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  padding: 0.25em 1em;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 ```
