@@ -1,27 +1,123 @@
-# Basic CSS example
+# Example
 
-Next.js has built-in support for [CSS Modules](https://nextjs.org/docs/basic-features/built-in-css-support#adding-component-level-css) allowing you to write scoped CSS by automatically creating a unique class name. CSS Module files can be imported anywhere in your application and you don't have to worry about collisions.
+### [テンプレートリテラル](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Template_literals)を用いて記述する
 
-## Deploy your own
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/basic-css)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/basic-css&project-name=basic-css&repository-name=basic-css)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
-
-```bash
-npx create-next-app --example basic-css basic-css-modules-app
+```css
+  <div className={`${styles.classB} ${styles.classC}`}></div>
 ```
 
-```bash
-yarn create next-app --example basic-css basic-css-modules-app
+- 固定の class 名を付与する場合
+
+```css
+<div className={`classD ${styles.classE} ${styles.classF}`}></div>
 ```
 
-```bash
-pnpm create next-app --example basic-css basic-css-modules-app
+- 条件付きで記述する場合
+
+```css
+<div className={`${styles.classG}` ${isApply ? styles.classH : ''}`}></div>
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+## 例 : 動的に style を書き換える
+
+![画面収録-2023-10-03-16 39 40](https://github.com/yud0uhu/basic-css-modules-app/assets/60646787/cd3ae931-4e09-4bca-8d55-a13b68183658)
+
+
+```css
+/* example/styles/button.module.css */
+
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 48px;
+  border-radius: 50px;
+  background-color: rgb(245, 205, 0);
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  padding: 0.25em 1em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.buttonWrapper:active {
+  transition-duration: 0.05s;
+  box-shadow: 0 0 0.2em #0003;
+  transform: scale(0.95);
+  filter: brightness(0.9) contrast(1.2);
+}
+
+.icon {
+  content: "🐻";
+  display: inline-block;
+  padding-right: 0.5em;
+}
+
+@media screen and (max-width: 360px) {
+  .icon {
+    content: "🐱";
+  }
+}
+```
+
+```tsx
+// example/components/Button.tsx
+
+import { useState, useEffect } from "react";
+import PhotoListComponent from "../components/PhotoListComponent";
+
+const App = () => {
+  const [text, setText] = useState("");
+  const [photoList, setPhotoList] = useState([]);
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/photos")
+      .then((res) => res.json())
+      .then(setPhotoList);
+  }, []);
+
+  return (
+    <div style={{ margin: "32px", textAlign: "center" }}>
+      <div>
+        <label htmlFor="text">[text]</label>
+        <input
+          id="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <PhotoListComponent text={text} photoList={photoList} />
+      </div>
+    </div>
+  );
+};
+
+export default App;
+```
+
+CSS Modules におけるクラスセレクタは、ブラウザ上で一意のクラス名に自動変換される
+
+```css
+.button_buttonWrapper__4xpvy:active {
+  transition-duration: 0.05s;
+  box-shadow: 0 0 0.2em #0003;
+  transform: scale(0.95);
+  filter: brightness(0.9) contrast(1.2);
+}
+.button_buttonWrapper__4xpvy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 48px;
+  border-radius: 50px;
+  background-color: rgb(245, 205, 0);
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  padding: 0.25em 1em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+```
